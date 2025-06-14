@@ -237,7 +237,11 @@ class RecipeSignupForm {
         }
 
         // Categories
-        if (recipe.categories && recipe.categories.length) {
+        let categories = recipe.categories;
+        if (typeof categories === 'string') {
+            categories = categories.split(/[,;]+/).map(c => c.trim()).filter(Boolean);
+        }
+        if (Array.isArray(categories) && categories.length) {
             const row = document.createElement('div');
             row.className = 'meta-row';
 
@@ -246,7 +250,7 @@ class RecipeSignupForm {
             label.textContent = 'Categories';
             row.appendChild(label);
 
-            recipe.categories.forEach((cat, idx) => {
+            categories.forEach((cat, idx) => {
                 const pill = document.createElement('span');
                 pill.className = 'pill ' + (idx % 2 === 0 ? 'pink' : 'blue');
                 pill.textContent = cat;
@@ -257,7 +261,11 @@ class RecipeSignupForm {
         }
 
         // Ingredients
-        if (recipe.ingredients) {
+        let ingredientsText = recipe.ingredients;
+        if (Array.isArray(ingredientsText)) {
+            ingredientsText = ingredientsText.join('; ');
+        }
+        if (ingredientsText) {
             const row = document.createElement('div');
             row.className = 'meta-row ingredients';
 
@@ -269,7 +277,7 @@ class RecipeSignupForm {
             const textSpan = document.createElement('span');
             textSpan.id = 'ingredient-text';
             textSpan.className = 'ingredient-text collapsed';
-            textSpan.textContent = recipe.ingredients;
+            textSpan.textContent = ingredientsText;
             row.appendChild(textSpan);
 
             const button = document.createElement('button');
