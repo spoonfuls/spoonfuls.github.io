@@ -405,27 +405,29 @@ class RecipeSignupForm {
     //     };
 
     getFormData() {
-        const member = this.members.find(m => m.displayName === this.memberInput.value);
-        const discordId = member ? member.discordId : '';
+        const member      = this.members.find(m => m.displayName === this.memberInput.value.trim());
+        const cookingFlag = this.getCookingValue() === 'yes';
+        const recipeInput = this.recipeInput.value.trim();
 
-        const cookingValue = this.getCookingValue();
-        const selectedRecipe = cookingValue === 'yes'
-            ? this.recipes.find(r => r.name === this.recipeInput.value)
-            : null; // recipe object if cooking
+        const selectedRecipe = cookingFlag
+            ? this.recipes.find(r => r.name === recipeInput)
+            : null;
 
-        const formData = {
+        // Always include note and recordUrl so Apps-Script can decide how to display them
+        const note      = this.notesField.value.trim();
+        const recordUrl = selectedRecipe ? (selectedRecipe.recordUrl || '') : '';
+
+        return {
             eventName : document.getElementById('eventName').value,
-            discordId,
+            discordId : member ? member.discordId : '',
             displayName: member ? member.displayName : '',
-            cooking   : cookingValue === 'yes',
+            cooking   : cookingFlag,
             recipeId  : selectedRecipe ? Number(selectedRecipe.id) : null,
             recipeName: selectedRecipe ? selectedRecipe.name : '',
-            recordUrl : selectedRecipe ? (selectedRecipe.recordUrl || '') : '',
-            note      : this.notesField.value.trim(),
+            recordUrl,
+            note,
             timestamp : new Date().toISOString()
         };
-
-        return formData;
     }
 
     async submitToGoogleSheets(formData) {
