@@ -129,7 +129,8 @@ body {
   .cover-column img {
     height: 100vh; /* span the viewport vertically */
     width: auto;
-    object-fit: none; /* natural proportions without cropping vertically */
+    object-fit: contain; /* scale so the whole height is visible */
+    object-position: center; /* center horizontally within column */
   }
 }
 
