@@ -16,7 +16,8 @@ body {
 
 /* aspect ratio of the book cover (width / height) */
 :root {
-  --cover-ratio: 0.806;
+  --cover-ratio: 0.806; /* natural width/height ratio of the book cover */
+  --cover-width: clamp(280px, 35vw, 480px); /* fixed column width on desktop */
 }
 
 .layout {
@@ -77,9 +78,9 @@ body {
 /* Wrapper grid for cover and content */
 .main-wrapper {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 3fr; /* favor content column width */
   gap: 2rem;
-  max-width: 1200px;
+  max-width: 1400px; /* allow room on large screens */
   margin: 0 auto;
   padding: 2rem 1rem;
   align-items: flex-start; /* prevent column stretch so cover doesn't fill entire height */
@@ -111,22 +112,24 @@ body {
     /* offset content to the right of the fixed cover */
     display: block;
     max-width: none;
-    padding-left: calc(100vh * var(--cover-ratio) + 2rem);
+    padding-left: calc(var(--cover-width) + 3rem);
+    padding-right: 2rem;
   }
 
   .cover-column {
     position: fixed;
     inset: 0 auto 0 0; /* top/right/bottom/left */
-    width: calc(100vh * var(--cover-ratio));
+    width: var(--cover-width);
     overflow: hidden; /* crop on the right */
     padding: 0;
+    display: flex;
+    justify-content: center; /* center image horizontally */
   }
 
   .cover-column img {
     height: 100vh; /* span the viewport vertically */
     width: auto;
-    object-fit: contain; /* scale so the whole height is visible */
-    object-position: center; /* center horizontally within column */
+    object-fit: none; /* natural proportions without cropping vertically */
   }
 }
 
